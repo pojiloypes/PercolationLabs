@@ -1,6 +1,9 @@
-package lab2.Task3;
+package lab2;
 
 import java.util.Random;
+
+import _CustomDataStructures.Point2D;
+
 import java.util.ArrayList;
 import java.util.List;
 

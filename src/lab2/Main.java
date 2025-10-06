@@ -1,7 +1,6 @@
 package lab2;
 
 import lab1.KnotPercolationModel;
-import lab2.Task3.PercolationModel2D;
 
 public class Main {
 

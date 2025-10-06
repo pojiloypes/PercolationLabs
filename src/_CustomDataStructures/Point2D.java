@@ -1,4 +1,4 @@
-package lab2.Task3;
+package _CustomDataStructures;
 
 public class Point2D {
     private final double x;

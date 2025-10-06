@@ -1,6 +1,9 @@
-package lab2.Task3;
+package lab2;
 
 import javax.swing.*;
+
+import _CustomDataStructures.Point2D;
+
 import java.awt.*;
 import java.util.List;
 

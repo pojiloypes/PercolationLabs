@@ -1,4 +1,4 @@
-package lab3;
+package _CustomDataStructures;
 
 /**
  * Структура непересекающихся множеств (Union-Find)

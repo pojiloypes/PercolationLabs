@@ -1,12 +1,17 @@
 package lab3;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import _CustomDataStructures.DisjointSet;
 import lab1.KnotPercolationModel;
 
 public class ClusterModel {
 
     /**
      * Вычисление кластеров на основе узловой сетки
-     * @param L размер сетки
+     * 
+     * @param L        размер сетки
      * @param knotGrid узловая сетка
      * @return сетка кластеров
      */
@@ -36,8 +41,9 @@ public class ClusterModel {
 
     /**
      * Печать сетки кластеров
+     * 
      * @param clusterGrid сетка кластеров
-     * @param L размер сетки
+     * @param L           размер сетки
      */
     public static void printClusterGrid(int[][] clusterGrid, int L) {
         int maxLen = 0;
@@ -64,9 +70,10 @@ public class ClusterModel {
 
     /**
      * Пометка кластеров в сетке
-     * @param L размер сетки
+     * 
+     * @param L           размер сетки
      * @param clusterGrid сетка кластеров
-     * @param ds структура непересекающихся множеств
+     * @param ds          структура непересекающихся множеств
      * @return помеченная сетка кластеров
      */
     private static int[][] markClusters(int L, int[][] clusterGrid, DisjointSet ds) {
@@ -80,5 +87,51 @@ public class ClusterModel {
         }
 
         return markedGrid;
+    }
+
+    /**
+     * Проверка наличия вертикального перколяционного кластера
+     * @param L размер сетки
+     * @param clusterGrid сетка кластеров
+     * @return true - если кластер есть, иначе false
+     */
+    public static boolean hasVerticalPercolationCluster(int L, int[][] clusterGrid) {
+        Set<Integer> set = new HashSet<>();
+        for (int i=0; i<L; i++) {
+            if (clusterGrid[0][i] > 0) {
+                set.add(clusterGrid[0][i]);
+            }
+        }
+
+        for (int i=0; i<L; i++) {
+            if (set.contains(clusterGrid[L-1][i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Проверка наличия горизонтального перколяционного кластера
+     * @param L размер сетки
+     * @param clusterGrid сетка кластеров
+     * @return true - если кластер есть, иначе false
+     */
+    public static boolean hasHorizaontalPercolationCluster(int L, int[][] clusterGrid) {
+        Set<Integer> set = new HashSet<>();
+        for (int i=0; i<L; i++) {
+            if (clusterGrid[i][0] > 0) {
+                set.add(clusterGrid[i][0]);
+            } 
+        }
+
+        for (int i=0; i<L; i++) {
+            if (set.contains(clusterGrid[i][L-1])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

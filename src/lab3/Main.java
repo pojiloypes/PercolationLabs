@@ -18,7 +18,31 @@ public class Main {
         ClusterModel.printClusterGrid(clusterGrid, L);
     }
 
+    public static void Task2() {
+        int L;
+        double p;
+        System.out.print("Введите размер сетки L: ");
+        L = Integer.parseInt(System.console().readLine());
+        System.out.print("Введите концентрацию узлов p (0 .. 1): ");   
+        p = Double.parseDouble(System.console().readLine());
+
+        int[][] knotGrid = lab1.KnotPercolationModel.generateGrid(L, p);
+        System.out.println("Сгенерированная узловая сетка:");
+        lab1.KnotPercolationModel.printGrid(knotGrid, L);
+        int[][] clusterGrid = ClusterModel.calculateClusters(L, knotGrid);
+        System.out.println("Сетка кластеров:");
+        ClusterModel.printClusterGrid(clusterGrid, L);
+
+        boolean hasVertical = ClusterModel.hasVerticalPercolationCluster(L, clusterGrid);
+        boolean hasHorizontal = ClusterModel.hasHorizaontalPercolationCluster(L, clusterGrid);
+        System.out.println("Вертикальный перколяционный кластер: " + (hasVertical ? "есть" : "нет"));
+        System.out.println("Горизонтальный перколяционный кластер: " + (hasHorizontal ? "есть" : "нет"));
+
+
+    }
+
     public static void main(String[] args) {
-        Task1();
+        //Task1();
+        Task2();
     }
 }
