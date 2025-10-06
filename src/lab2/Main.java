@@ -1,5 +1,6 @@
 package lab2;
 
+import _CustomDataStructures.ParamReader;
 import lab1.KnotPercolationModel;
 
 public class Main {
@@ -8,12 +9,10 @@ public class Main {
      * Задание 1. Перколяционная модель связей
      */
     public static void Task1() {
-        int L;
-        double p_bond;
-        System.out.print("Введите размер сетки L: ");
-        L = Integer.parseInt(System.console().readLine());
-        System.out.print("Введите концентрацию связей p_bond (0 .. 1): ");   
-        p_bond = Double.parseDouble(System.console().readLine());
+        System.out.println("Задание 1. Перколяционная модель связей");
+
+        int L = ParamReader.readL();
+        double p_bond = ParamReader.readP_bond();
 
         int[][] grid = RibPercolationModel.generateRibGrid(L, p_bond);
         RibPercolationModel.printConnectionsGrid(grid, L);
@@ -23,14 +22,11 @@ public class Main {
      * Задание 2. Перколяционная модель связей на основе узловой сетки
      */
     public static void Task2() {
-        int L;
-        double p_site, p_bond;
-        System.out.print("Введите размер сетки L: ");
-        L = Integer.parseInt(System.console().readLine());
-         System.out.print("Введите концентрацию узлов p_bond (0 .. 1): ");   
-        p_site = Double.parseDouble(System.console().readLine());
-        System.out.print("Введите концентрацию связей p_bond (0 .. 1): ");   
-        p_bond = Double.parseDouble(System.console().readLine());
+        System.out.println("\nЗадание 2. Перколяционная модель связей на основе узловой сетки");
+
+        int L = ParamReader.readL();
+        double p_site = ParamReader.readP_site();
+        double p_bond = ParamReader.readP_bond();
 
         int[][] grid = KnotPercolationModel.generateGrid(L, p_site);
         int[][] grid2 = RibPercolationModel.generateFullGrid(grid, L, p_bond);
@@ -41,17 +37,12 @@ public class Main {
      * Задание 3. Перколяционная модель в 2D с окрудностями
      */
     public static void Task3() {
-        int L;
-        double p;
-        int r, blurredBoundary = 0;
-        System.out.print("Введите размер сетки L: ");
-        L = Integer.parseInt(System.console().readLine());
-        System.out.print("Введите концентрацию точек p (0 .. 1): ");   
-        p = Double.parseDouble(System.console().readLine());
-        System.out.print("Введите радиус r: ");   
-        r = Integer.parseInt(System.console().readLine());
-        System.out.print("Введите размытость границы (целое число, 0 - резкая граница): ");
-        blurredBoundary = Integer.parseInt(System.console().readLine());
+        System.out.println("\nЗадание 3. Перколяционная модель в 2D с окрудностями");
+        
+        int L = ParamReader.readL();
+        double p = ParamReader.readP_bond();
+        int r = ParamReader.readR();
+        int blurredBoundary = ParamReader.readBlurredBoundary();
 
         var points = PercolationModel2D.generatePoints(L, p, r, blurredBoundary);
         PercolationModel2D.printPoints(points);

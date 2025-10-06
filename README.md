@@ -1,5 +1,6 @@
 
 
+
 # PercolationLabs
 
 > Репозиторий для лабораторных работ по курсу «Перколяционные системы»
@@ -13,6 +14,7 @@ PercolationLabs/
 ├── src/
 │   ├── _CustomDataStructures/
 │   │   ├── DisjointSet.java
+│   │   ├── ParamReader.java
 │   │   └── Point2D.java
 │   ├── lab1/
 │   │   ├── KnotPercolationModel.java
@@ -46,6 +48,7 @@ PercolationLabs/
 
 ### _CustomDataStructures
 - **DisjointSet.java** — реализация структуры непересекающихся множеств (DSU/Union-Find).
+- **ParamReader.java** — вспомогательный класс для чтения параметров.
 - **Point2D.java** — вспомогательный класс для работы с точками.
 
 ---

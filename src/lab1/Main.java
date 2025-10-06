@@ -1,20 +1,18 @@
 package lab1;
 
+import _CustomDataStructures.ParamReader;
+
 public class Main {
 
     /*
      * Задание 1. Моделирование узловой сетки
      */
-    public static void task1() {
-        int L;
-        double p;
-        int testsCount;
-        System.out.print("Введите размер сетки L: ");
-        L = Integer.parseInt(System.console().readLine());
-        System.out.print("Введите концентрацию p (0 .. 1): ");   
-        p = Double.parseDouble(System.console().readLine());
-        System.out.print("Введите количество тестов: ");
-        testsCount = Integer.parseInt(System.console().readLine());
+    public static void Task1() {
+        System.out.println("Задание 1. Моделирование узловой сетки");
+
+        int L = ParamReader.readL();
+        double p = ParamReader.readP_bond();
+        int testsCount = ParamReader.readTestsCount();
 
         KnotPercolationModel.gridModeling(L, p);
         KnotPercolationModel.testModel(L, p, testsCount);
@@ -23,13 +21,11 @@ public class Main {
     /*
      * Задание 2. Вычисление критерия Пирсона
      */
-    public static void task2() {
-        int L;
-        double p;
-        System.out.print("Введите размер сетки L: ");
-        L = Integer.parseInt(System.console().readLine());
-        System.out.print("Введите концентрацию p (0 .. 1): ");   
-        p = Double.parseDouble(System.console().readLine());
+    public static void Task2() {
+        System.out.println("\nЗадание 2. Вычисление критерия Пирсона");
+
+        int L = ParamReader.readL();
+        double p = ParamReader.readP_bond();
 
         System.out.println("Хи^2 для 1 испытания: " + KnotPercolationModel.getPirson(L, p, 1));
         System.out.println("Хи^2 для 100 испытания: " + KnotPercolationModel.getPirson(L, p, 100));
@@ -38,19 +34,19 @@ public class Main {
     /*
      * Задание 2. Вычисление критерия Пирсона для большого количества испытаний
      */
-    public static void task2BigTest() {
-       int L = 1000;
-       for(float p=0.1f; p < 1; p+=0.1) {
-        System.out.println("\n Результаты для p = " + p);
-        System.out.println("Хи^2 для 1 испытания: " + KnotPercolationModel.getPirson(L, p, 1));
-        System.out.println("Хи^2 для 100 испытания: " + KnotPercolationModel.getPirson(L, p, 100));
-       }
+    public static void Task2BigTest() {
+        System.out.println("\nЗадание 2. Вычисление критерия Пирсона для большого количества испытаний");
+        int L = 1000;
+        for (float p = 0.1f; p < 1; p += 0.1) {
+            System.out.println("\n Результаты для p = " + p);
+            System.out.println("Хи^2 для 1 испытания: " + KnotPercolationModel.getPirson(L, p, 1));
+            System.out.println("Хи^2 для 100 испытания: " + KnotPercolationModel.getPirson(L, p, 100));
+        }
     }
 
     public static void main(String[] args) {
-        task1();
-        task2();
-        task2BigTest();
+        Task1();
+        Task2();
+        Task2BigTest();
     }
 }
-
