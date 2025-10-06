@@ -9,8 +9,6 @@ public class Main {
      * Задание 1. Перколяционная модель связей
      */
     public static void Task1() {
-        RibPercolationModel rpm = new RibPercolationModel();
-
         int L;
         double p_bond;
         System.out.print("Введите размер сетки L: ");
@@ -18,17 +16,14 @@ public class Main {
         System.out.print("Введите концентрацию связей p_bond (0 .. 1): ");   
         p_bond = Double.parseDouble(System.console().readLine());
 
-        int[][] grid = rpm.generateRibGrid(L, p_bond);
-        rpm.printConnectionsGrid(grid, L);
+        int[][] grid = RibPercolationModel.generateRibGrid(L, p_bond);
+        RibPercolationModel.printConnectionsGrid(grid, L);
     }
 
     /**
      * Задание 2. Перколяционная модель связей на основе узловой сетки
      */
     public static void Task2() {
-        RibPercolationModel rpm = new RibPercolationModel();
-        KnotPercolationModel kpm = new KnotPercolationModel();
-
         int L;
         double p_site, p_bond;
         System.out.print("Введите размер сетки L: ");
@@ -38,17 +33,15 @@ public class Main {
         System.out.print("Введите концентрацию связей p_bond (0 .. 1): ");   
         p_bond = Double.parseDouble(System.console().readLine());
 
-        int[][] grid = kpm.generateGrid(L, p_site);
-        int[][] grid2 = rpm.generateFullGrid(grid, L, p_bond);
-        rpm.printFullGrid(grid, grid2, L);
+        int[][] grid = KnotPercolationModel.generateGrid(L, p_site);
+        int[][] grid2 = RibPercolationModel.generateFullGrid(grid, L, p_bond);
+        RibPercolationModel.printFullGrid(grid, grid2, L);
     }
 
     /**
      * Задание 3. Перколяционная модель в 2D с окрудностями
      */
     public static void Task3() {
-        PercolationModel2D pm2d = new PercolationModel2D();
-
         int L;
         double p;
         int r, blurredBoundary = 0;
@@ -61,9 +54,9 @@ public class Main {
         System.out.print("Введите размытость границы (целое число, 0 - резкая граница): ");
         blurredBoundary = Integer.parseInt(System.console().readLine());
 
-        var points = pm2d.generatePoints(L, p, r, blurredBoundary);
-        pm2d.printPoints(points);
-        pm2d.drawPoints(points, L, r, blurredBoundary);
+        var points = PercolationModel2D.generatePoints(L, p, r, blurredBoundary);
+        PercolationModel2D.printPoints(points);
+        PercolationModel2D.drawPoints(points, L, r, blurredBoundary);
     }
 
     public static void main(String[] args) {

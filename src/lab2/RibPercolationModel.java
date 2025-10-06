@@ -6,7 +6,7 @@ import java.util.Random;
  * Перколяционная модель связей
  */
 public class RibPercolationModel {
-    Random rand = new Random();
+    private static Random rand = new Random();
 
     /**
      * Генерация сетки связей
@@ -14,7 +14,7 @@ public class RibPercolationModel {
      * @param p_bond концентрация связей
      * @return сетка связей
      */
-    int[][] generateRibGrid(int L, double p_bond) {
+    public static int[][] generateRibGrid(int L, double p_bond) {
         int[][] grid = new int[L][L];
 
         for (int i = 0; i < L - 1; i++) {
@@ -33,7 +33,7 @@ public class RibPercolationModel {
      * @param p_bond концентрация связей
      * @return
      */
-    int[][] generateFullGrid(int[][] knotGrid, int L, double p_bond) {
+    public static int[][] generateFullGrid(int[][] knotGrid, int L, double p_bond) {
         int[][] grid = new int[L][L];
 
         for (int i = 0; i < L - 1; i++) {
@@ -53,7 +53,7 @@ public class RibPercolationModel {
      * @param grid сетка связей
      * @param L размер сетки
      */
-    public void printConnectionsGrid(int[][] grid, int L) {
+    public static void printConnectionsGrid(int[][] grid, int L) {
 
         for (int i = 0; i < L; i++) {
             String curLine = "", underLine = "";
@@ -71,7 +71,7 @@ public class RibPercolationModel {
      * @param connections сетка связей
      * @param L размер сетки
      */
-    public void printFullGrid(int[][] knots, int[][] connections, int L) {
+    public static void printFullGrid(int[][] knots, int[][] connections, int L) {
         for (int i = 0; i < L; i++) {
             String curLine = "", underLine = "";
             for (int j = 0; j < L; j++) {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PercolationModel2D {
-    Random rand = new Random();
+    private static Random rand = new Random();
 
     /**
      * Граничное условие: окружность целиком внутри квадрата LxL
@@ -15,7 +15,7 @@ public class PercolationModel2D {
      * @param r радиус
      * @return true, если окружность целиком внутри квадрата
      */
-    public boolean boundaryCondition1(Point2D p, int L, int r, int blurredBoundary) {
+    public static boolean boundaryCondition1(Point2D p, int L, int r, int blurredBoundary) {
         return (p.getX() - r >= (0-blurredBoundary)) && (p.getX() + r <= (L+blurredBoundary)) &&
                 (p.getY() - r >= (0-blurredBoundary)) && (p.getY() + r <= (L+blurredBoundary));
     }
@@ -27,7 +27,7 @@ public class PercolationModel2D {
      * @param r радиус окружностей
      * @return true, если пересечение есть
      */
-    public boolean hasIntersection(List<Point2D> points, Point2D p, double r) {
+    public static boolean hasIntersection(List<Point2D> points, Point2D p, double r) {
         for (Point2D other : points) {
             double dx = p.getX() - other.getX();
             double dy = p.getY() - other.getY();
@@ -46,13 +46,12 @@ public class PercolationModel2D {
      * @param blurredBoundary размытость границы (0 - резкая граница)
      * @return список точек
      */
-    public List<Point2D> generatePoints(int L, double p, int r, int blurredBoundary) {
+    public static List<Point2D> generatePoints(int L, double p, int r, int blurredBoundary) {
         double areaTotal = L * L;
         double areaCircle = Math.PI * r * r;
         int targetCount = (int) Math.round(p * areaTotal / areaCircle);
 
         List<Point2D> points = new ArrayList<>();
-        Random rand = new Random();
         int maxFails = 100; // ограничение на количество неудачных попыток
         int fails = 0;
 
@@ -78,7 +77,7 @@ public class PercolationModel2D {
      * Вывод точек в консоль
      * @param points список точек
      */
-    public void printPoints(List<Point2D> points) {
+    public static void printPoints(List<Point2D> points) {
         for (var point : points) {
             System.out.println("Point: (" + point.getX() + ", " + point.getY() + ")");
         }
@@ -91,7 +90,7 @@ public class PercolationModel2D {
      * @param r радиус точек
      * @param blurredBoundary размытость границы (0 - резкая граница)
      */
-    public void drawPoints(List<Point2D> points, int L, int r, int blurredBoundary) {
+    public static void drawPoints(List<Point2D> points, int L, int r, int blurredBoundary) {
        ScaledCirclesView.showWindow(points, L, blurredBoundary, r);
     }
 }

@@ -3,7 +3,7 @@ package lab1;
 import java.util.Random;
 
 public class KnotPercolationModel {
-    Random rand = new Random();
+    private static Random rand = new Random();
 
     /**
      * Генерация узловой сетки
@@ -11,7 +11,7 @@ public class KnotPercolationModel {
      * @param p концентрация узлов
      * @return узловая сетка
      */
-    public int[][] generateGrid(int L, double p) {
+    public static  int[][] generateGrid(int L, double p) {
         int[][] grid = new int[L][L];
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < L; j++) {
@@ -27,7 +27,7 @@ public class KnotPercolationModel {
      * @param L размер сетки
      * @return фактическая концентрация узлов
      */
-    double calcConcentration(int[][] grid, int L) {
+    public static double calcConcentration(int[][] grid, int L) {
         int occupiedCount = 0;
         int totalCount = L*L;
 
@@ -47,7 +47,7 @@ public class KnotPercolationModel {
      * @param grid узловая сетка
      * @param L размер сетки
      */
-    void printGrid(int[][] grid, int L) {
+    public static void printGrid(int[][] grid, int L) {
         for (int i=0; i<L; i++) {
             for (int j=0; j<L; j++) {
                 if (grid[i][j] == 1) {
@@ -66,7 +66,7 @@ public class KnotPercolationModel {
      * @param p концентрация узлов
      * @return узловая сетка
      */
-    int[][] gridModeling(int L, double p) {
+    static int[][] gridModeling(int L, double p) {
         int[][] grid = generateGrid(L, p);
         System.out.println("Фактическое начение концентрации: " + calcConcentration(grid, L));
         printGrid(grid, L);
@@ -79,7 +79,7 @@ public class KnotPercolationModel {
      * @param p концентрация узлов
      * @param testsCount количество тестов
      */
-    void testModel(int L, double p, int testsCount) {
+    public static void testModel(int L, double p, int testsCount) {
         double totalConcentration = 0.0;
 
         for (int i=0; i<testsCount; i++) {
@@ -98,7 +98,7 @@ public class KnotPercolationModel {
      * @param d число измерений
      * @return оптимальный размер блока
      */
-    int scott(int n, int d) {
+    static int scott(int n, int d) {
         return (int) Math.pow(Math.pow(2*n/3, 1/(d*3)) + 1, d);
     }
 
@@ -109,7 +109,7 @@ public class KnotPercolationModel {
      * @param testsCount количество тестов
      * @return значение критерия Пирсона
      */
-    double getPirson(int L, double p, int testsCount) {
+    public static double getPirson(int L, double p, int testsCount) {
         int k = scott(L*L, 2);
         int b = (int)Math.sqrt(L*L/k);
         double xiCommon = 0.0;
@@ -134,6 +134,24 @@ public class KnotPercolationModel {
             xiCommon += xi;
         }
         return xiCommon / testsCount;
+    }
+
+    /**
+     * Подсчет количества узлов в сетке
+     * @param grid узловая сетка
+     * @param L размер сетки
+     * @return количество узлов
+     */
+    public static int getCountOfKnots(int[][] grid, int L) {
+        int count = 0;
+        for (int i=0; i<L; i++) {
+            for (int j=0; j<L; j++) {
+                if (grid[i][j] == 1) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
 
