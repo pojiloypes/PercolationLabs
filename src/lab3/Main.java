@@ -1,6 +1,7 @@
 package lab3;
 
 import _CustomDataStructures.ParamReader;
+import _CustomDataStructures.PercolationModel;
 
 public class Main {
 
@@ -13,13 +14,15 @@ public class Main {
         int L = ParamReader.readL();
         double p = ParamReader.readP_site();
 
-        int[][] knotGrid = lab1.KnotPercolationModel.generateGrid(L, p);
-        System.out.println("Сгенерированная узловая сетка:");
-        lab1.KnotPercolationModel.printGrid(knotGrid, L);
+        PercolationModel pm = new PercolationModel(L);
 
-        int[][] clusterGrid = ClusterModel.calculateClusters(L, knotGrid);
+        pm.genKnotGrid(p);
+        System.out.println("Сгенерированная узловая сетка:");
+        pm.printKnotGrid();
+
+        pm.calculateClusters();
         System.out.println("Сетка кластеров:");
-        ClusterModel.printClusterGrid(clusterGrid, L);
+        pm.printClusterGrid();
     }
 
     /**
@@ -31,21 +34,18 @@ public class Main {
         int L = ParamReader.readL();
         double p = ParamReader.readP_bond();
 
-        int[][] knotGrid = lab1.KnotPercolationModel.generateGrid(L, p);
+        PercolationModel pm = new PercolationModel(L);
+
+        pm.genKnotGrid(p);
         System.out.println("Сгенерированная узловая сетка:");
-        lab1.KnotPercolationModel.printGrid(knotGrid, L);
+        pm.printKnotGrid();
         
-        int[][] clusterGrid = ClusterModel.calculateClusters(L, knotGrid);
+        pm.calculateClusters();
         System.out.println("Сетка кластеров:");
-        ClusterModel.printClusterGrid(clusterGrid, L);
+        pm.printClusterGrid();
 
-        boolean hasVertical = ClusterModel.hasVerticalPercolationCluster(L, clusterGrid);
-        System.out.println("Вертикальный перколяционный кластер: " + (hasVertical ? "есть" : "нет"));
-
-        boolean hasHorizontal = ClusterModel.hasHorizaontalPercolationCluster(L, clusterGrid);
-        System.out.println("Горизонтальный перколяционный кластер: " + (hasHorizontal ? "есть" : "нет"));
-
-
+        boolean hasCluster = pm.hasPercolationCluster();
+        System.out.println("Перколяционный кластер: " + (hasCluster ? "есть" : "нет"));
     }
 
     public static void main(String[] args) {

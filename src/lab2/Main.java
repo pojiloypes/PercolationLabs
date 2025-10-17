@@ -1,7 +1,7 @@
 package lab2;
 
 import _CustomDataStructures.ParamReader;
-import lab1.KnotPercolationModel;
+import _CustomDataStructures.PercolationModel;
 
 public class Main {
 
@@ -14,8 +14,10 @@ public class Main {
         int L = ParamReader.readL();
         double p_bond = ParamReader.readP_bond();
 
-        int[][] grid = RibPercolationModel.generateRibGrid(L, p_bond);
-        RibPercolationModel.printConnectionsGrid(grid, L);
+        PercolationModel pm = new PercolationModel(L);
+
+        int[][] grid = pm.genRibGrid(L, p_bond);
+        pm.printConnectionsGrid(grid, L);
     }
 
     /**
@@ -28,9 +30,11 @@ public class Main {
         double p_site = ParamReader.readP_site();
         double p_bond = ParamReader.readP_bond();
 
-        int[][] grid = KnotPercolationModel.generateGrid(L, p_site);
-        int[][] grid2 = RibPercolationModel.generateFullGrid(grid, L, p_bond);
-        RibPercolationModel.printFullGrid(grid, grid2, L);
+        PercolationModel pm = new PercolationModel(L);
+
+        pm.genKnotGrid(p_site);
+        pm.genRibOnKnotsGrid(p_bond);
+        pm.printFullGrid();
     }
 
     /**

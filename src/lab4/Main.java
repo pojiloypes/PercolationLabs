@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import _CustomDataStructures.ParamReader;
-import lab1.KnotPercolationModel;
-import lab3.ClusterModel;
+import _CustomDataStructures.PercolationModel;
 
 public class Main {
 
@@ -38,14 +37,16 @@ public class Main {
             int percClstCnt = 0;
             double pSum = 0;
             for (int test = 0; test < testCnt; test++) {
-                int[][] grid = KnotPercolationModel.generateGrid(L, p);
-                pSum += KnotPercolationModel.calcConcentration(grid, L);
 
-                int[][] clusterGrid = ClusterModel.calculateClusters(L, grid);
-                if (ClusterModel.hasHorizaontalPercolationCluster(L, clusterGrid) || ClusterModel.hasVerticalPercolationCluster(L, clusterGrid)) {
+                PercolationModel pm = new PercolationModel(L);
+                pm.genKnotGrid(p);
+                pSum += pm.GetActualConcentration();
+
+                pm.GetClusterGrid();
+
+                if (pm.hasPercolationCluster()) {
                     percClstCnt++;
                 }
-                // percClstCnt += ClusterModel.hasVerticalPercolationCluster(L, clusterGrid) ? 1 : 0;
             }
             result.add(new TestsRow(pSum / testCnt, (double) percClstCnt / testCnt));
 
