@@ -29,6 +29,22 @@ public class ParamReader {
         return readInt("Введите количество тестов: ");
     }
 
+    public static double readPStep() {
+        return readDouble("Введите шаг изменения концентрации: ");
+    }
+
+    public static double readPMin() {
+        return readDouble("Введите минимальное значение концентрации p (0 .. 1): ");
+    }
+
+    public static int readTestsCountWithMin(int min) {
+        int k = readTestsCount();
+        if (k < min) {
+            System.out.println("Количество тестов должно быть не меньше 100. Текущее число тестов изменено на " + min);
+        }
+        return Math.max(k, min);
+    }
+
     /**
      * Чтение целого числа с консоли с обработкой ошибок
      * @param prompt выводимый запрос
