@@ -1,37 +1,30 @@
 package lab2;
 
 import java.util.Random;
-
-import _CustomDataStructures.Point2D;
-
+import _CustomDataStructures.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PercolationModel2D {
     private static Random rand = new Random();
 
-    /**
-     * Граничное условие: окружность целиком внутри квадрата LxL
-     * 
+   /**
+     * Проверяет, находится ли вся окружность строго внутри границ [0, L] x [0, L].
      * @param p центр окружности
-     * @param L размерность квадрата
-     * @param r радиус
-     * @return true, если окружность целиком внутри квадрата
+     * @param L размер области
+     * @param r радиус окружности
+     * @return true, если окружность полностью внутри
      */
-    public static boolean boundaryCondition1(Point2D p, int L, int r, int blurredBoundary) {
-        return (p.getX() - r >= (0-blurredBoundary)) && (p.getX() + r <= (L+blurredBoundary)) &&
-                (p.getY() - r >= (0-blurredBoundary)) && (p.getY() + r <= (L+blurredBoundary));
+    private static boolean isInsideOpenBoundary(Pair<Double> p, int L, double r) {
+        return (p.getX() - r >= 0) && (p.getX() + r <= L) &&
+               (p.getY() - r >= 0) && (p.getY() + r <= L);
     }
 
     /**
-     * Проверка пересечения с уже существующими окружностями
-     * @param points уже существующие окружности
-     * @param p новая окружность
-     * @param r радиус окружностей
-     * @return true, если пересечение есть
+     * Проверка пересечения для открытых границ.
      */
-    public static boolean hasIntersection(List<Point2D> points, Point2D p, double r) {
-        for (Point2D other : points) {
+    public static boolean hasIntersectionOpen(List<Pair<Double>> points, Pair<Double> p, double r) {
+        for (Pair<Double> other : points) {
             double dx = p.getX() - other.getX();
             double dy = p.getY() - other.getY();
             if (Math.hypot(dx, dy) < 2 * r) {
@@ -42,35 +35,65 @@ public class PercolationModel2D {
     }
 
     /**
-     * Генерация точек
-     * @param L размер сетки
-     * @param p концентрация точек
-     * @param r радиус точек
-     * @param blurredBoundary размытость границы (0 - резкая граница)
-     * @return список точек
+     * Проверка пересечения для периодических границ.
      */
-    public static List<Point2D> generatePoints(int L, double p, int r, int blurredBoundary) {
+    public static boolean hasIntersectionPeriodic(List<Pair<Double>> points, Pair<Double> p, double r, int L) {
+        for (Pair<Double> other : points) {
+            double dx = Math.abs(p.getX() - other.getX());
+            double dy = Math.abs(p.getY() - other.getY());
+
+            if (dx > L / 2.0) dx = L - dx;
+            if (dy > L / 2.0) dy = L - dy;
+
+            if (Math.hypot(dx, dy) < 2 * r) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Генерация точек с учетом типа границ.
+     */
+    public static List<Pair<Double>> generatePoints(int L, double p, int r, BoundaryType boundaryType) {
         double areaTotal = L * L;
         double areaCircle = Math.PI * r * r;
         int targetCount = (int) Math.round(p * areaTotal / areaCircle);
 
-        List<Point2D> points = new ArrayList<>();
-        int maxFails = 100; // ограничение на количество неудачных попыток
+        List<Pair<Double>> points = new ArrayList<>();
+        int maxFails = targetCount * 100;
         int fails = 0;
 
         while (points.size() < targetCount && fails < maxFails) {
-            double x = blurredBoundary == 0 ? r + rand.nextDouble() * (L - 2 * r) : rand.nextDouble() * L;
-            double y = blurredBoundary == 0 ? r + rand.nextDouble() * (L - 2 * r) : rand.nextDouble() * L;
-            Point2D candidate = new Point2D(x, y);
+            Pair<Double> candidate;
 
-            if (!boundaryCondition1(candidate, L, r, blurredBoundary)) {
-                fails++;
-            } else if (!hasIntersection(points, candidate, r)) {
-                points.add(candidate);
-                fails = 0;
-            } else {
-                fails++;
+            if (boundaryType == BoundaryType.OPEN) {
+                double x = rand.nextDouble() * L;
+                double y = rand.nextDouble() * L;
+                candidate = new Pair<>(x, y);
+
+                if (isInsideOpenBoundary(candidate, L, r) && !hasIntersectionOpen(points, candidate, r)) {
+                    points.add(candidate);
+                    fails = 0;
+                } else {
+                    fails++;
+                }
+            } else { // PERIODIC
+                double x = rand.nextDouble() * L;
+                double y = rand.nextDouble() * L;
+                candidate = new Pair<>(x, y);
+                
+                if (!hasIntersectionPeriodic(points, candidate, r, L)) {
+                    points.add(candidate);
+                    fails = 0;
+                } else {
+                    fails++;
+                }
             }
+        }
+
+        if (fails >= maxFails) {
+            System.out.println("Внимание: достигнут лимит попыток. Не удалось разместить все окружности.");
         }
 
         return points;
@@ -78,9 +101,8 @@ public class PercolationModel2D {
 
     /**
      * Вывод точек в консоль
-     * @param points список точек
      */
-    public static void printPoints(List<Point2D> points) {
+    public static void printPoints(List<Pair<Double>> points) {
         for (var point : points) {
             System.out.println("Point: (" + point.getX() + ", " + point.getY() + ")");
         }
@@ -88,12 +110,8 @@ public class PercolationModel2D {
 
     /**
      * Отрисовка точек
-     * @param points список точек
-     * @param L размер сетки
-     * @param r радиус точек
-     * @param blurredBoundary размытость границы (0 - резкая граница)
      */
-    public static void drawPoints(List<Point2D> points, int L, int r, int blurredBoundary) {
-       ScaledCirclesView.showWindow(points, L, blurredBoundary, r);
+    public static void drawPoints(List<Pair<Double>> points, int L, int r, BoundaryType boundaryType) {
+       ScaledCirclesView.showWindow(points, L, r, boundaryType);
     }
 }

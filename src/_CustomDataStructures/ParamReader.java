@@ -50,7 +50,7 @@ public class ParamReader {
      * @param prompt выводимый запрос
      * @return прочитанное int значение
      */
-    private static int readInt(String prompt) {
+    public static int readInt(String prompt) {
         System.out.print(prompt);
         while (!scanner.hasNextInt()) {
             System.out.println("Ошибка ввода. Пожалуйста, введите целое число.");
@@ -65,7 +65,7 @@ public class ParamReader {
      * @param prompt выводимый запрос
      * @return прочитанное double значение
      */
-    private static double readDouble(String prompt) {
+    public static double readDouble(String prompt) {
         System.out.print(prompt);
         while (!scanner.hasNextDouble()) {
             System.out.println("Ошибка ввода. Пожалуйста, введите число с плавающей точкой.");

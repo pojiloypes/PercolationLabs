@@ -2,14 +2,28 @@ package _CustomDataStructures;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 public class PercolationModel {
     int L;
     int[][] knotGrid;
-    int[][] ribGrid;
+    List<List<Pair<Integer>>> ribGrid;
     int[][] clusterGrid;
     double actualConcentration;
     Random rand;
+
+    private List<List<Pair<Integer>>> initList(int L) {
+        List<List<Pair<Integer>>> list = new ArrayList<>(L);
+        for (int i = 0; i < L; i++) {
+            List<Pair<Integer>> row = new ArrayList<>(L);
+            for(int j = 0; j<L; j++) {
+                row.add(new Pair<>(-1, -1));
+            }
+            list.add(row);
+        }
+        return list;
+    }
 
     /**
      * Конструктор модели перколяции
@@ -18,7 +32,7 @@ public class PercolationModel {
     public PercolationModel(int L) {
         this.L = L;
         this.knotGrid = new int[L][L];
-        this.ribGrid = new int[L][L];
+        this.ribGrid = initList(L);
         this.clusterGrid = new int[L][L];
         actualConcentration = -1;
         rand = new Random();
@@ -36,7 +50,7 @@ public class PercolationModel {
      * Получение сетки связей
      * @return сетка связей
      */
-    public int[][] GetRibGrid() {
+    public List<List<Pair<Integer>>> GetRibGrid() {
         return ribGrid;
     }
 
@@ -112,12 +126,16 @@ public class PercolationModel {
      * @param p_bond концентрация связей
      * @return сетка связей
      */
-    public int[][] genRibGrid(int L, double p_bond) {
-        int[][] ribGrid = new int[L][L];
-        for (int i = 0; i < L - 1; i++) {
-            for (int j = 0; j < L - 1; j++) {
-                ribGrid[i][j + 1] = rand.nextDouble() < p_bond ? 1 : 0;
-                ribGrid[i + 1][j] = rand.nextDouble() < p_bond ? 1 : 0;
+    public List<List<Pair<Integer>>> genRibGrid(int L, double p_bond) {
+        List<List<Pair<Integer>>> ribGrid = initList(L);
+
+        for (int i = 0; i < L; i++) {
+            for (int j = 0; j < L; j++) {
+                int rightNeighbor = j < L - 1 && rand.nextDouble() < p_bond ? 1 : -1;
+                int bottomNeighbor = i < L - 1 && rand.nextDouble() < p_bond ? 1 : -1;
+                
+                ribGrid.get(i).get(j).setX(rightNeighbor);
+                ribGrid.get(i).get(j).setY(bottomNeighbor);
             }
         }
 
@@ -129,13 +147,13 @@ public class PercolationModel {
      * @param grid сетка связей
      * @param L размер сетки
      */
-    public void printConnectionsGrid(int[][] grid, int L) {
+    public void printConnectionsGrid(List<List<Pair<Integer>>> grid, int L) {
 
         for (int i = 0; i < L; i++) {
             String curLine = "", underLine = "";
             for (int j = 0; j < L; j++) {
-                curLine += j < L - 1 && grid[i][j + 1] == 1 ? "■---" : "■   ";
-                underLine += i < L - 1 && grid[i + 1][j] == 1 ? "|   " : "    ";
+                curLine += j < L - 1 && grid.get(i).get(j).getX() == 1 ? "■---" : "■   ";
+                underLine += i < L - 1 && grid.get(i).get(j).getY() == 1 ? "|   " : "    ";
             }
             System.out.println(curLine + "\n" + underLine);
         }
@@ -146,11 +164,14 @@ public class PercolationModel {
      * @param p_bond концентрация связей
      */
     public void genRibOnKnotsGrid(double p_bond) {
-        for (int i = 0; i < L - 1; i++) {
-            for (int j = 0; j < L - 1; j++) {
+        for (int i = 0; i < L; i++) {
+            for (int j = 0; j < L; j++) {
                 if (knotGrid[i][j] == 1) {
-                    ribGrid[i][j + 1] = knotGrid[i][j + 1] == 1 && rand.nextDouble() < p_bond ? 1 : 0;
-                    ribGrid[i + 1][j] = knotGrid[i + 1][j] == 1 && rand.nextDouble() < p_bond ? 1 : 0;
+                    int rightNeighbor = ( j < L - 1 && knotGrid[i][j + 1] == 1 && rand.nextDouble() < p_bond) ? 1 : -1;
+                    int bottomNeighbor = (i < L - 1 && knotGrid[i + 1][j] == 1 && rand.nextDouble() < p_bond) ? 1 : -1;
+
+                    ribGrid.get(i).get(j).setX(rightNeighbor);
+                    ribGrid.get(i).get(j).setY(bottomNeighbor);
                 }
             }
         }
@@ -164,8 +185,8 @@ public class PercolationModel {
             String curLine = "", underLine = "";
             for (int j = 0; j < L; j++) {
                 if (knotGrid[i][j] == 1) {
-                    curLine += j < L - 1 && ribGrid[i][j + 1] == 1 ? "■---" : "■   ";
-                    underLine += i < L - 1 && ribGrid[i + 1][j] == 1 ? "|   " : "    ";
+                    curLine += j < L - 1 && ribGrid.get(i).get(j).getX() == 1 ? "■---" : "■   ";
+                    underLine += i < L - 1 && ribGrid.get(i).get(j).getY() == 1 ? "|   " : "    ";
                 } else {
                     curLine += "    ";
                     underLine += "    ";
