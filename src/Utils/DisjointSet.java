@@ -1,4 +1,4 @@
-package _CustomDataStructures;
+package Utils;
 
 /**
  * Структура непересекающихся множеств (Union-Find)

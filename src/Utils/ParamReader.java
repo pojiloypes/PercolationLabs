@@ -1,4 +1,4 @@
-package _CustomDataStructures;
+package Utils;
 
 import java.util.Scanner;
 

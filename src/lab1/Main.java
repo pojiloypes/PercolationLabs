@@ -1,6 +1,6 @@
 package lab1;
 
-import _CustomDataStructures.ParamReader;
+import Utils.ParamReader;
 
 public class Main {
 

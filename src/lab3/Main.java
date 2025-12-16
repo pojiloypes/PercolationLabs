@@ -1,7 +1,7 @@
 package lab3;
 
-import _CustomDataStructures.ParamReader;
-import _CustomDataStructures.PercolationModel;
+import Utils.ParamReader;
+import Utils.PercolationModel;
 
 public class Main {
 

@@ -1,7 +1,9 @@
 package lab2;
 
 import java.util.Random;
-import _CustomDataStructures.*;
+
+import Utils.*;
+
 import java.util.ArrayList;
 import java.util.List;
 

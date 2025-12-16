@@ -1,4 +1,4 @@
-package _CustomDataStructures;
+package Utils;
 
 public enum BoundaryType {
     OPEN,       // Открытые границы

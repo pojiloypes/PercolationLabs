@@ -1,4 +1,4 @@
-package lab4;
+package Utils;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -64,6 +64,29 @@ public class Printer {
                 writer.write("Концентрация\tВероятность\n");
                 for (TestsRow row : result) {
                     writer.write(String.format("%.6f\t%.6f\n", row.p, row.pPerc));
+                }
+                System.out.println("\nДанные записаны в файл: " + filePath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+     public static void saveLab5ResultsToTxt(List<Lab5ResultRow> result, String filePath) {
+        java.io.File file = new java.io.File(filePath);
+        try {
+            if (!file.exists()) {
+                if (file.createNewFile()) {
+                    System.out.println("Файл создан: " + filePath);
+                } else {
+                    System.out.println("Не удалось создать файл: " + filePath);
+                }
+            }
+            try (FileWriter writer = new FileWriter(file, false)) {
+                // Заголовки для удобного копирования в Excel
+                writer.write("p\t S\t P\n");
+                for (Lab5ResultRow row : result) {
+                    writer.write(String.format("%.6f\t%.6f\t%.6f\n", row.p, row.S, row.P));
                 }
                 System.out.println("\nДанные записаны в файл: " + filePath);
             }

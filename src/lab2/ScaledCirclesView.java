@@ -1,7 +1,9 @@
 package lab2;
 
 import javax.swing.*;
-import _CustomDataStructures.*;
+
+import Utils.*;
+
 import java.awt.*;
 import java.util.List;
 

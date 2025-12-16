@@ -1,4 +1,4 @@
-package _CustomDataStructures;
+package Utils;
 
 public class Pair<T> {
     private T x;
