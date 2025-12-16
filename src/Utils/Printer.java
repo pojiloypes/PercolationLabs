@@ -84,9 +84,9 @@ public class Printer {
             }
             try (FileWriter writer = new FileWriter(file, false)) {
                 // Заголовки для удобного копирования в Excel
-                writer.write("S\t p\t P\n");
+                writer.write("p\t S\t P\n");
                 for (Lab5ResultRow row : result) {
-                    writer.write(String.format("%.6f\t%.6f\t%.6f\n", row.S, row.p, row.P));
+                    writer.write(String.format("%.6f\t%.6f\t%.6f\n", row.p, row.S, row.P));
                 }
                 System.out.println("\nДанные записаны в файл: " + filePath);
             }

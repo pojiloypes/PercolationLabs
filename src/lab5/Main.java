@@ -12,73 +12,70 @@ import Utils.Printer;
 
 public class Main {
     public static void Task1() {
-        int L = 10; //ParamReader.readL();
-        double pStart = 0.3; //ParamReader.readPMin();
-        double pStep = 0.05;
-        int testCnt = 100; //ParamReader.readTestsCountWithMin(100);
+        int L = ParamReader.readL();
+        double pStart = ParamReader.readPMin();
+        double pStep = 0.001;
+        int testCnt = ParamReader.readTestsCountWithMin(100);
 
         int N = L*L;
         
-        List<Lab5ResultRow> results = new ArrayList<>();
-        for (double p = pStart; p <= 1.0000001; p += pStep) {
-            Map<Integer, Integer> commonClstrsSizes = new HashMap<>();
-            int percolationClustersCnt = 0;
-            double pSum = 0.0;
+         List<Lab5ResultRow> results = new ArrayList<>();
 
-            for (int test = 0; test < testCnt; test++) {
-                PercolationModel pm = new PercolationModel(L);
-                pm.genKnotGrid(p);
-                pm.calculateClusters();
+    for (double p = pStart; p <= 1.0000001; p += pStep) {
 
-                Map<Integer, Integer> clstrsSizes = pm.GetClustersSizes();
-                List<Integer> percolationClusters = pm.getPercolationClusters();
+        double Ssum = 0.0;      // ⟨S⟩
+        double Psum = 0.0;      // ⟨P∞⟩
+        double pSum = 0.0;      // ⟨p⟩
 
-                pSum += pm.GetActualConcentration();
+        for (int test = 0; test < testCnt; test++) {
 
-                for (int key : clstrsSizes.keySet()) {
-                    if (!percolationClusters.contains(key)) {
-                        Integer val = clstrsSizes.get(key);
-                        commonClstrsSizes.put(val, commonClstrsSizes.getOrDefault(val, 0) + 1);
-                    } else {
-                        percolationClustersCnt++;
-                    }
+            PercolationModel pm = new PercolationModel(L);
+            pm.genKnotGrid(p);
+            pm.calculateClusters();
+
+            Map<Integer, Integer> clstrsSizes = pm.GetClustersSizes();
+            List<Integer> percolationClusters = pm.getPercolationClusters();
+
+            pSum += pm.GetActualConcentration();
+
+            // Ns для одного испытания
+            Map<Integer, Integer> Ns = new HashMap<>();
+
+            int N_inf = 0; // число узлов в перколяционном кластере
+
+            for (int cid : clstrsSizes.keySet()) {
+                int size = clstrsSizes.get(cid);
+
+                if (percolationClusters.contains(cid)) {
+                    N_inf += size; // формула (6)
+                } else {
+                    Ns.put(size, Ns.getOrDefault(size, 0) + 1);
                 }
             }
 
-            Map<Integer, Double> commonClstrsSizesPercent = new HashMap<>();
-            for (int key : commonClstrsSizes.keySet()) {
-                commonClstrsSizesPercent.put(key, (double) commonClstrsSizes.get(key) / testCnt);
+            // считаем S для одного испытания
+            double sum_sn = 0.0;
+            double sum_s2n = 0.0;
+
+            for (int s : Ns.keySet()) {
+                int ns = Ns.get(s);
+                sum_sn += s * ns;
+                sum_s2n += s * s * ns;
             }
 
-            Map<Integer, Double> nsp = new HashMap<>();
-            for (int key : commonClstrsSizesPercent.keySet()) {
-                nsp.put(key, (double) commonClstrsSizesPercent.get(key) / N);
-            }
+            double S_i = (sum_sn == 0) ? 0.0 : sum_s2n / sum_sn;
+            double P_i = (double) N_inf / N;
 
-            Map<Integer, Double> snsp = new HashMap<>();
-            for (int key : nsp.keySet()) {
-                snsp.put(key, nsp.get(key) * key);
-            }
-
-            double cntOfOccupiedKnots = 0;
-            for (int key : snsp.keySet()) {
-                cntOfOccupiedKnots += snsp.get(key);
-            }
-
-            Map<Integer, Double> ws = new HashMap<>();
-            for (int key : snsp.keySet()) {
-                ws.put(key, (double) snsp.get(key) / cntOfOccupiedKnots);
-            }
-
-            double S = 0.0;
-            for (int key : ws.keySet()) {
-                S += ws.get(key) * key;
-            }
-
-            double P = (double)percolationClustersCnt / N;
-            double pRes = (double)pSum / testCnt;
-            results.add(new Lab5ResultRow(S, pRes, P));
+            Ssum += S_i;
+            Psum += P_i;
         }
+
+        double Savg = Ssum / testCnt;
+        double Pavg = Psum / testCnt;
+        double pAvg = pSum / testCnt;
+
+        results.add(new Lab5ResultRow(Savg, pAvg, Pavg));
+    }
 
         try {
             Printer.saveLab5ResultsToTxt(results, "src/lab5/results/lab5_results.txt");
