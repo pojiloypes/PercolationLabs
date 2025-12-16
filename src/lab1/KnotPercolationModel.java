@@ -1,6 +1,6 @@
 package lab1;
 
-import _CustomDataStructures.PercolationModel;
+import Utils.PercolationModel;
 
 public class KnotPercolationModel {
 

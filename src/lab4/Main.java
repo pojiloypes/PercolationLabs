@@ -3,8 +3,10 @@ package lab4;
 import java.util.ArrayList;
 import java.util.List;
 
-import _CustomDataStructures.ParamReader;
-import _CustomDataStructures.PercolationModel;
+import Utils.ParamReader;
+import Utils.PercolationModel;
+import Utils.Printer;
+import Utils.TestsRow;
 
 public class Main {
 

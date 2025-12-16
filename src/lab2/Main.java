@@ -2,10 +2,10 @@ package lab2;
 
 import java.util.List;
 
-import _CustomDataStructures.BoundaryType;
-import _CustomDataStructures.Pair;
-import _CustomDataStructures.ParamReader;
-import _CustomDataStructures.PercolationModel;
+import Utils.BoundaryType;
+import Utils.Pair;
+import Utils.ParamReader;
+import Utils.PercolationModel;
 
 public class Main {
 
@@ -50,9 +50,7 @@ public class Main {
         int L = ParamReader.readL();
         double p = ParamReader.readP_bond();
         int r = ParamReader.readR();
-        // blurredBoundary больше не запрашивается
 
-        // Выбор типа границ
         System.out.println("Выберите тип границ:");
         System.out.println("1. Открытые (окружности не могут выходить за пределы)");
         System.out.println("2. Периодические (тороидальная поверхность)");
@@ -65,7 +63,6 @@ public class Main {
             boundaryType = BoundaryType.OPEN;
         }
 
-        // Обновленные вызовы методов
         var points = PercolationModel2D.generatePoints(L, p, r, boundaryType);
         PercolationModel2D.printPoints(points);
         PercolationModel2D.drawPoints(points, L, r, boundaryType);

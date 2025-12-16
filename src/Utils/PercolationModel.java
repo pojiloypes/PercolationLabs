@@ -1,4 +1,4 @@
-package _CustomDataStructures;
+package Utils;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -16,6 +16,7 @@ public class PercolationModel {
     int clustersCount;
     double actualConcentration;
     Random rand;
+    Map<Integer, Integer> clustersSizes;
 
     /**
      * Конструктор модели перколяции
@@ -30,6 +31,7 @@ public class PercolationModel {
         actualConcentration = -1;
         this.clustersCount = 0;
         rand = new Random();
+        clustersSizes = new HashMap<>();
     }
 
     /**
@@ -72,6 +74,14 @@ public class PercolationModel {
     }
 
     /**
+     * Получение числа кластеров каждого размера
+     * @return число кластеров каждого размера
+     */
+    public Map<Integer, Integer> GetClustersSizes() {
+        return clustersSizes;
+    }
+
+    /**
      * Генерация узловой сетки
      * 
      * @param p концентрация узлов
@@ -101,7 +111,7 @@ public class PercolationModel {
             }
         }
 
-        actualConcentration = occupiedCount / totalCount;
+        actualConcentration = (double)occupiedCount / totalCount;
     }
 
     /**
@@ -271,6 +281,7 @@ public class PercolationModel {
                         clusterIdsMap.put(clusterGrid[i][j], clusterNum);
                         clusterGrid[i][j] = clusterNum++;
                     }
+                    clustersSizes.put(clusterGrid[i][j], clustersSizes.getOrDefault(clusterGrid[i][j], 0) + 1);
                 }
             }
         }
@@ -350,51 +361,68 @@ public class PercolationModel {
      * @return наличие перколяционного кластера
      */
     public boolean hasPercolationCluster() {
-        return hasHorizaontalPercolationCluster() || hasVerticalPercolationCluster();
+        return getPercolationClusters().size() > 0;
     }
 
     /**
-     * Проверка наличия вертикального перколяционного кластера
-     * 
-     * @return наличие вертикального перколяционного кластера
+     * Получение списка кластеров перколяции
+     * @return список кластеров перколяции
      */
-    private boolean hasVerticalPercolationCluster() {
-        Set<Integer> set = new HashSet<>();
-        for (int i = 0; i < L; i++) {
-            if (clusterGrid[0][i] > 0) {
-                set.add(clusterGrid[0][i]);
-            }
-        }
+    public List<Integer> getPercolationClusters() {
+        List<Integer> lst1 = getVerticalPercolationClusters();
+        List<Integer> lst2 = getHorizontalPercolationClusters();
+        Set<Integer> unionList = new HashSet<>(lst1);
+        unionList.addAll(lst2);
 
-        for (int i = 0; i < L; i++) {
-            if (set.contains(clusterGrid[L - 1][i])) {
-                return true;
-            }
-        }
-
-        return false;
+        return new ArrayList<>(unionList);
     }
 
     /**
-     * Проверка наличия горизонтального перколяционного кластера
-     * 
-     * @return наличие горизонтального перколяционного кластера
+     * Получение списка вертикальных кластеров перколяции
+     * @return список кластеров перколяции
      */
-    private boolean hasHorizaontalPercolationCluster() {
-        Set<Integer> set = new HashSet<>();
+    private List<Integer> getVerticalPercolationClusters() {
+        List<Integer> lst1 = new ArrayList<>();
         for (int i = 0; i < L; i++) {
             if (clusterGrid[i][0] > 0) {
-                set.add(clusterGrid[i][0]);
+                lst1.add(clusterGrid[0][i]);
             }
         }
 
+        List<Integer> lst2 = new ArrayList<>();
         for (int i = 0; i < L; i++) {
-            if (set.contains(clusterGrid[i][L - 1])) {
-                return true;
+            if (clusterGrid[L-1][i] > 0) {
+                lst2.add(clusterGrid[L - 1][i]);
             }
         }
 
-        return false;
+        lst1.retainAll(lst2);
+
+        return lst1;
+    }
+
+    /**
+     * Получение списка горизонтальных кластеров перколяции
+     * @return список кластеров перколяции
+     */
+    private List<Integer> getHorizontalPercolationClusters() {
+        List<Integer> lst1 = new ArrayList<>();
+        for (int i = 0; i < L; i++) {
+            if (clusterGrid[i][0] > 0) {
+                lst1.add(clusterGrid[i][0]);
+            }
+        }
+
+        List<Integer> lst2 = new ArrayList<>();
+        for (int i = 0; i < L; i++) {
+            if (clusterGrid[i][L-1] > 0) {
+                lst2.add(clusterGrid[i][L-1]);
+            }
+        }
+
+        lst1.retainAll(lst2);
+
+        return lst1;
     }
 
     private List<List<Pair<Integer>>> initList(int L) {
