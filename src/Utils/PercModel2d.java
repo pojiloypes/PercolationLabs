@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class PercModel2d {
     int L;
@@ -14,6 +13,7 @@ public class PercModel2d {
     double permeableLayer = 0.2;
     List<Pair<Double>> points;
     List<List<Integer>> clusters;
+    List<List<List<Integer>>> pointsGrid; // хранит в себе индексы точек разбитых по сетке
 
     private Random rand;
 
@@ -40,25 +40,64 @@ public class PercModel2d {
         return actualConcentration;
     }
 
+    /**
+     * Проверяет, пересекается ли новая точка с уже существующими точками
+     * 
+     * @param newPoint новая точка
+     * @return true, если есть пересечение, иначе false
+     */
     public boolean hasIntersection(Pair<Double> newPoint) {
-        for (Pair<Double> point : points) {
+        var neighborIndices = getNearbyPointsIndices(newPoint);
+        for (int idx : neighborIndices) {
+            Pair<Double> point = points.get(idx);
             double dx = newPoint.getX() - point.getX();
             double dy = newPoint.getY() - point.getY();
             if (Math.hypot(dx, dy) < 2 * radius) {
                 return true;
             }
         }
+
         return false;
     }
 
+    /**
+     * Находит индексы точек, находящихся рядом с заданной точкой
+     * @param point точка
+     * @return список индексов рядом находящихся точек
+     */
+    private List<Integer> getNearbyPointsIndices(Pair<Double> point) {
+        int x = (int) Math.round(point.getX());
+        int y = (int) Math.round(point.getY());
+        int dist = (int) Math.round(2 * radius);
+
+        List<Integer> nearbyIndices = new ArrayList<>();
+
+        for (int i = -dist; i <= dist; i++) {
+            for (int j = -dist; j <= dist; j++) {
+                int newX = x + i;
+                int newY = y + j;
+
+                if (newX >= 0 && newX < pointsGrid.size() && newY >= 0 && newY < pointsGrid.get(0).size()) {
+                    nearbyIndices.addAll(pointsGrid.get(newX).get(newY));
+                }
+            }
+        }
+
+        return nearbyIndices;
+    }
+
+    /**
+     * Генерирует точки в соответствии с заданной концентрацией p
+     */
     public void genPoints() {
         double areaTotal = L * L;
         double areaCircle = Math.PI * radius * radius;
         int targetCount = (int) Math.round(p * areaTotal / areaCircle);
-
         points = new ArrayList<>();
         int maxFails = targetCount * 100;
         int fails = 0;
+
+        fillPointsGrid(L);
 
         while (points.size() < targetCount && fails < maxFails) {
             Pair<Double> candidate;
@@ -69,6 +108,7 @@ public class PercModel2d {
 
             if (!hasIntersection(candidate)) {
                 points.add(candidate);
+                pointsGrid.get((int) Math.round(x)).get((int) Math.round(y)).add(points.indexOf(candidate));
                 fails = 0;
             } else {
                 fails++;
@@ -76,10 +116,30 @@ public class PercModel2d {
         }
 
         if (fails >= maxFails) {
-            //System.out.println("Внимание: достигнут лимит попыток. Не удалось разместить все окружности.");
+            // System.out.println("Внимание: достигнут лимит попыток. Не удалось разместить
+            // все окружности.");
         }
     }
 
+    /**
+     * Заполняет сетку для ускорения поиска пересечений
+     * 
+     * @param L размер модели
+     */
+    private void fillPointsGrid(int L) {
+        pointsGrid = new ArrayList<>();
+        for (int i = 0; i < L + 1; i++) {
+            pointsGrid.add(new ArrayList<>());
+            for (int j = 0; j < L + 1; j++) {
+                pointsGrid.get(i).add(new ArrayList<>());
+            }
+        }
+    }
+
+    /**
+     * Вычисляет критерий Пирсона для проверки равномерности распределения точек
+     * @return  значение критерия Пирсона
+     */
     public double pearsonCriterion() {
         if (points == null || points.isEmpty()) {
             throw new IllegalStateException("Точки не сгенерированы");
@@ -144,7 +204,9 @@ public class PercModel2d {
             Pair<Double> pi = points.get(i);
             double xi = pi.getX();
             double yi = pi.getY();
-            for (int j = i + 1; j < n; j++) {
+
+            var neighborIndices = getNearbyPointsIndices(pi);
+            for (int j : neighborIndices) {
                 Pair<Double> pj = points.get(j);
                 double dx = xi - pj.getX();
                 double dy = yi - pj.getY();
@@ -161,9 +223,6 @@ public class PercModel2d {
             groups.computeIfAbsent(root, k -> new ArrayList<>()).add(i);
         }
 
-        // Сформировать список кластеров в детерминированном порядке:
-        // сортируем кластеры по минимальному индексу внутри кластера,
-        // чтобы номера кластеров шли 1,2,3...
         List<List<Integer>> list = new ArrayList<>(groups.values());
         list.sort((a, b) -> {
             int ma = a.stream().mapToInt(Integer::intValue).min().orElse(Integer.MAX_VALUE);

@@ -14,8 +14,7 @@ import Utils.TestsRow;
 
 public class Main {
 
-    public static void Task1(PercModel2d model)
-    {
+    public static void Task1(PercModel2d model) {
         model.genPoints();
         PercModel2dView.showModel(model);
     }
@@ -30,8 +29,7 @@ public class Main {
         }
     }
 
-    public static void Task3(PercModel2d model)
-    {
+    public static void Task3(PercModel2d model) {
         model.calcClusterIndices();
         PercModel2dView.showModelWithClusters(model);
     }
@@ -46,16 +44,19 @@ public class Main {
     }
 
     public static void Task5() {
-        int L_1 = 50;
-        int L_2 = 60;
-        int L_3 = 70;
+        int L_1 = 80;
+        int L_2 = 90;
+        int L_3 = 100;
         double pStart = 0.0;
         double pStep = 0.01;
         int testCnt = 10;
 
-        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_1, pStart, pStep, testCnt), "src/individualWork/results/task5_1.txt");
-        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_2, pStart, pStep, testCnt), "src/individualWork/results/task5_2.txt");
-        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_3, pStart, pStep, testCnt), "src/individualWork/results/task5_3.txt");
+        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_1, pStart, pStep, testCnt),
+                "src/individualWork/results/task5_1.txt");
+        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_2, pStart, pStep, testCnt),
+                "src/individualWork/results/task5_2.txt");
+        Printer.saveindividualWorkTask5ResultsToTxt(testPercClstrs(L_3, pStart, pStep, testCnt),
+                "src/individualWork/results/task5_3.txt");
     }
 
     private static List<TestsRow> testPercClstrs(int L, double pStart, double pStep, int testCnt) {
@@ -84,7 +85,7 @@ public class Main {
     }
 
     public static void Test() {
-        for (double p = 0.1; p < 1.0091; p+=0.01) {
+        for (double p = 0.1; p < 1.0091; p += 0.01) {
             PercModel2d model = new PercModel2d(200, p);
             model.genPoints();
             PercModel2dView.showModel(model);
@@ -94,15 +95,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //Test();
-        // int L = ParamReader.readL();
-        // double p = ParamReader.readP_bond();
-        // PercModel2d model = new PercModel2d(L, p);
-        // Task1(model);
-        // Task2(model);
-        // Task3(model);
-        // Task4(model);
-        // System.err.println(model.getActualConcentration());
+        int L = ParamReader.readL();
+        double p = ParamReader.readP_bond();
+        PercModel2d model = new PercModel2d(L, p);
+        Task1(model);
+        Task2(model);
+        Task3(model);
+        Task4(model);
         Task5();
     }
 }
